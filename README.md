@@ -13,7 +13,7 @@ Note that the user can run the pimgavir.sh script with more than one “strategy
 
 For example, the following command
  
- _pimgavir.sh R1.fq R2.fq SampleName 24 —read_based —ass_based —filter _
+  pimgavir.sh R1.fq R2.fq SampleName 24 —read_based —ass_based —filter
 
 will run the pipeline to execute both the strategies, —read_based and —ass_based. 
 
