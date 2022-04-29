@@ -1,4 +1,5 @@
-![PIMGAVir-Logo](https://user-images.githubusercontent.com/65239532/165729696-852827ba-85a8-4006-8d02-0ad305c23889.png)
+![Screen Shot 2022-04-29 at 11 15 08 AM](https://user-images.githubusercontent.com/65239532/165880242-41eaeff5-dca7-4387-91b6-19e4b2dfdfa5.png)
+
 
 PIpeline for MetaGenomic Analysis of Viruses
 
