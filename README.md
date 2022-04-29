@@ -18,7 +18,7 @@ For example, the following command
 
 will run the pipeline to execute both the strategies, —read_based and —ass_based. 
 
-Refer to [PIMGAVir_Installation_Manual.docx](https://github.com/emiliomastriani/PIMGAVir/files/8581766/PIMGAVir_Installation_Manual.docx) for a complete guide on configuring and install PIMGAVir.
+Refer to [PIMGAVir_Installation_Manual.pdf](https://github.com/emiliomastriani/PIMGAVir/files/8588600/PIMGAVir_Installation_Manual.pdf) for a complete guide on configuring and installing PIMGAVir.
 
-Refer to [PIMGAVir_User_Manual.docx](https://github.com/emiliomastriani/PIMGAVir/files/8581774/PIMGAVir_User_Manual.docx) for a quick use of PIMGAVir
+Refer to [PIMGAVir_User_Manual.pdf](https://github.com/emiliomastriani/PIMGAVir/files/8588601/PIMGAVir_User_Manual.pdf)  for a quick use of PIMGAVir
 
