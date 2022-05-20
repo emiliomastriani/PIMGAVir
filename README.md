@@ -18,7 +18,11 @@ For example, the following command
 
 will run the pipeline to execute both the strategies, —read_based and —ass_based. 
 
-Refer to [PIMGAVir_Installation_Manual.pdf](https://github.com/emiliomastriani/PIMGAVir/files/8588600/PIMGAVir_Installation_Manual.pdf) for a complete guide on configuring and installing PIMGAVir.
+Refer to [PIMGAVir_User_Manual.pdf](https://github.com/emiliomastriani/PIMGAVir/files/8736813/PIMGAVir_User_Manual.pdf) for a complete guide on configuring and installing PIMGAVir.
 
-Refer to [PIMGAVir_User_Manual.pdf](https://github.com/emiliomastriani/PIMGAVir/files/8588601/PIMGAVir_User_Manual.pdf)  for a quick use of PIMGAVir
+Refer to [PIMGAVir_User_Manual.pdf](https://github.com/emiliomastriani/PIMGAVir/files/8588601/PIMGAVir_User_Manual.pdf) for a quick use of PIMGAVir
+
+Refer to [PIMGAVIR-CAMISIM.txt](https://github.com/emiliomastriani/PIMGAVir/files/8736295/PIMGAVIR-CAMISIM.txt) for generating synthetic data using CAMISIM and run PIMGAVir using it. If you prefer to use synthetic data used during the PIMGAVir test, download the following file SyntheticData_PIMGAVir.tgz
+
+Refer to [CreateDBs.txt](https://github.com/emiliomastriani/PIMGAVir/files/8736791/CreateDBs.txt) for a step-by-step guide on installing and configuring the DBs need by PIMGAVir
 
