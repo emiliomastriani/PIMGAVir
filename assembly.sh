@@ -5,8 +5,8 @@
 
 merged_seq=$1 		#readsNotrRNA_filtered.fq
 AssDir=$2		#Assembly folder
-JTrim=$3		#Number of cores to use 
-ConcScript="/usr/share/NGS-PKGs/Concatenate/concatenate_reads.py"
+JTrim=$3		#Number of cores to use
+ConcScript="concatenate_reads.py" #"/usr/share/NGS-PKGs/Concatenate/concatenate_reads.py"
 
 ##Versioning
 version="PIMGAVir V.1.1 -- 07.03.2022"
@@ -26,14 +26,14 @@ spades_contigs_idx="spades_contigs_idx"
 spades_contigs_bam=$AssDir"/spades_contigs.bam"
 megahit_contigs_sorted_bam=$AssDir"/megahit_contigs.sorted.bam"
 spades_contigs_sorted_bam=$AssDir"/spades_contigs.sorted.bam"
-megahit_contigs_improved=$AssDir"/megahit_contigs_improved.fasta"
-spades_contigs_improved=$AssDir"/spades_contigs_improved.fasta"
+megahit_contigs_improved=$AssDir"/megahit_contigs_improved"
+spades_contigs_improved=$AssDir"/spades_contigs_improved"
 spades_prokka=$AssDir"/spades_prokka"
 megahit_prokka=$AssDir"/megahit_prokka"
 
 
 ##Checking for Version option
-if (($# == 1)) 
+if (($# == 1))
 then
 	if [ "$1" == "--version" ]
 	then
@@ -107,7 +107,7 @@ samtools sort $megahit_contigs_bam -o $megahit_contigs_sorted_bam #-nthreads=$JT
 echo -e "$(date) Sort bam file [samtools sort] from spades assembly" >> $logfile 2>&1
 samtools sort $spades_contigs_bam -o $spades_contigs_sorted_bam #-nthreads=$JTrim
 
-#Index bam files 
+#Index bam files
 #NB: in case of ERROR --> maybe files created with $JTrim cause troubles
 echo -e "$(date) Indexing bam file [samtools index] from megahit assembly" >> $logfile 2>&1
 samtools index $megahit_contigs_sorted_bam
@@ -124,8 +124,8 @@ echo "4. Executing contigs analysis (quast)"
 echo -e "$(date) Executing de-novo assembly by spades with the following arguments: merged fastq file is $merged_seq" >> $logfile 2>&1
 #Command to execute
 #Using QUAST
-quast.py -o $megahit_quast $megahit_contigs_improved
-quast.py -o $spades_quast $spades_contigs_improved
+quast.py -o $megahit_quast $megahit_contigs_improved".fasta"
+quast.py -o $spades_quast $spades_contigs_improved".fasta"
 
 echo "5. Gene annotation using PROKKA"
 echo -e "$(date) Gene annotation using PROKKA" >> $logfile 2>&1
@@ -133,11 +133,11 @@ echo -e "$(date) Gene annotation using PROKKA" >> $logfile 2>&1
 #Gene annotation
 #Using PROKKA, Viruses genus on Contigs from spades
 echo -e "$(date) Gene annotation: Using PROKKA, Viruses genus on Contigs from spades" >> $logfile 2>&1
-prokka $spades_contigs_improved --usegenus Viruses --out $spades_prokka --centre X --compliant --prefix spades_prokka --force
+prokka $spades_contigs_improved".fasta" --usegenus Viruses --out $spades_prokka --centre X --compliant --prefix spades_prokka --force
 
 #Using PROKKA, Viruses genus on Contigs from megahit
 echo -e "$(date) Gene annotation: Using PROKKA, Viruses genus on Contigs from megahit" >> $logfile 2>&1
-prokka $megahit_contigs_improved --usegenus Viruses --out $megahit_prokka --prefix megahit_prokka --force
+prokka $megahit_contigs_improved".fasta" --usegenus Viruses --out $megahit_prokka --prefix megahit_prokka --force
 
 #Use artemis to visualize the Gene annotation
 ##For example art $megahit_prokka.gbk

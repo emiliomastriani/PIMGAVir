@@ -1,0 +1,227 @@
+#################################################################CREATING THE RefSeqProt diamond DB##################################################################
+
+##Create diamond RefSeq protein DB with taxonomic information
+wget -c ftp://ftp.ncbi.nlm.nih.gov/refseq/release/complete/complete.nonredundant_protein*.faa.gz [nonredundant]
+wget -c ftp://ftp.ncbi.nlm.nih.gov/refseq/release/complete/complete.[0-9]*.protein.faa.gz [redundant]
+
+##To obtain information about the current number of files and size
+1. connect to ftp://ftp.ncbi.nlm.nih.gov/refseq/release/complete/ using MacOS
+2. on terminal execute mount to check the current mount point [/Volumes/complete]
+3. cd /Volumes/complete
+4. ls complete.nonredundant_protein*.faa.gz | wc -l --> 1565
+5. du -h *.faa.gz | grep 'M' | awk '{ SUM += $1} END {print SUM}' --> 45402.8
+
+wget -c ftp://ftp.ncbi.nlm.nih.gov/pub/taxonomy/accession2taxid/prot.accession2taxid.gz
+
+##Verify its integrity
+gzip -tv prot.accession2taxid.gz
+
+
+wget -c ftp://ftp.ncbi.nlm.nih.gov/pub/taxonomy/taxdmp.zip [Remember to unzip this one]
+
+##Suppose we downloaded all the faa.gz files into the /home/emilio/DiamondDB folder and the taxdmp.zip file into the taxDMP sub-folder. We will have the following tree structure:
+
+emilio@frodo:~/DiamondDB$ tree
+.
+├── complete.nonredundant_protein.1.protein.faa.gz
+├── complete.nonredundant_protein.10.protein.faa.gz
+├── complete.nonredundant_protein.100.protein.faa.gz
+├── complete.nonredundant_protein.1000.protein.faa.gz
+├── complete.nonredundant_protein.1001.protein.faa.gz
+├── complete.nonredundant_protein.1002.protein.faa.gz
+├── complete.nonredundant_protein.1003.protein.faa.gz
+├── complete.nonredundant_protein.1004.protein.faa.gz
+....
+├── complete.nonredundant_protein.997.protein.faa.gz
+├── complete.nonredundant_protein.998.protein.faa.gz
+├── complete.nonredundant_protein.999.protein.faa.gz
+├── prot.accession2taxid.gz
+└── taxDMP
+    ├── citations.dmp
+    ├── delnodes.dmp
+    ├── division.dmp
+    ├── gencode.dmp
+    ├── merged.dmp
+    ├── names.dmp
+    ├── nodes.dmp
+    └── taxdmp.zip
+
+Move to the /home/emilio/DiamondDB folder [cd /home/emilio/DiamondDB] and check for the validity of gzipped files:
+
+rm -rf gzip_test_report.txt; for i in `ls complete.nonredundant_protein*.faa.gz`; do gzip -tv $i &>> gzip_test_report.txt; done [nonredundant]
+rm -rf gzip_test_report.txt; for i in `ls complete.[0-9]*.protein.faa.gz`; do gzip -tv $i &>> gzip_test_report.txt; done [redundant]
+
+grep invalid gzip_test_report.txt 
+gzip: complete.nonredundant_protein.1163.protein.faa.gz: invalid compressed data--format violated
+gzip: complete.nonredundant_protein.1285.protein.faa.gz: invalid compressed data--format violated
+gzip: complete.nonredundant_protein.1292.protein.faa.gz: invalid compressed data--format violated
+gzip: complete.nonredundant_protein.1293.protein.faa.gz: invalid compressed data--format violated
+gzip: complete.nonredundant_protein.328.protein.faa.gz: invalid compressed data--format violated
+gzip: complete.nonredundant_protein.360.protein.faa.gz: invalid compressed data--crc error
+gzip: complete.nonredundant_protein.360.protein.faa.gz: invalid compressed data--length error
+gzip: complete.nonredundant_protein.584.protein.faa.gz: invalid compressed data--crc error
+gzip: complete.nonredundant_protein.584.protein.faa.gz: invalid compressed data--length error 
+
+.....
+
+Rename files with errors to prepare new download:
+for i in `grep invalid gzip_test_report.txt | awk -F ":" '{print $2}'`; do mv $i $i"_ERRATA"; done
+
+Re-download errata files:
+for i in `grep invalid gzip_test_report.txt | awk -F ":" '{print $2}'`; do wget -c ftp://ftp.ncbi.nlm.nih.gov/refseq/release/complete/$i; done
+
+Test re-downloaded files:
+for i in `grep invalid gzip_test_report.txt | awk -F ":" '{print $2}'`; do gzip -tv $i; done
+
+Remove ERRATA files:
+rm -rf *_ERRATA
+
+
+###############################################################CREATE THE diamond db###############################################################################
+Executing the following command:
+
+time zcat *.faa.gz | diamond makedb --taxonmap prot.accession2taxid.gz --taxonnames taxDMP/names.dmp --taxonnodes taxDMP/nodes.dmp -d refseq_protein_nonredund_diamond -v --log [nonredundant]
+
+time zcat *.faa.gz | diamond makedb --taxonmap prot.accession2taxid.gz --taxonnames taxDMP/names.dmp --taxonnodes taxDMP/nodes.dmp -d refseq_protein_redund_diamond -v --log [redundant]
+
+Using diamond v2.0.13.151 with 16 #CPU threads and 32Gb RAM, it took 
+
+[nonredundant]
+real    78m32.002s
+user    170m40.081s
+sys     3m57.558s
+
+The database will contain:
+
+Database sequences                   188429555
+Database letters                     65043307720
+Accessions in database               188429555
+Entries in accession to taxid file   1045057754
+Database accessions mapped to taxid  188339268
+Database sequences mapped to taxid   188339268
+Database hash                        0987f8827e574693df8aa10181456276
+Total time                           4712s
+
+[redundant]
+Database sequences                   41039154
+Database letters                     24257063574
+Accessions in database               41039154
+Entries in accession to taxid file   1045057754
+Database accessions mapped to taxid  41039003
+Database sequences mapped to taxid   41039003
+Database hash                        c88ebf7fb8312b74fff3c3b348bec0e3
+Total time                           1452s
+
+real	24m11.807s
+user	72m1.745s
+sys	1m25.984s
+
+
+##Check diamond blastx against Human Papilloma Virus 
+#Get Human papilloma virus 
+efetch -dbnuccore -id NC_027779.1 -format fasta > HumanPapillomaVirus.fasta
+
+time diamond blastx -d /home/emilio/DiamondDB/refseq_protein_nonredund_diamond.dmnd -p 16 -q HumanPapillomaVirus.fasta -f 6 qseqid staxids bitscore sseqid pident length mismatch gapopen qstart qend sstart send evalue -o HumanPapillomaVirus_DiaMond.out -t /tmp -c 4 -b 0.77 -k 1 -v --log
+
+Time required:
+real	15m35.707s
+user	148m18.599s
+sys	1m25.439s
+
+##Remove DUP
+awk '!a[$1]++ {print $1 "\t" $2}' HumanPapillomaVirus_DiaMond.out > HumanPapillomaVirus_NoDup.m8
+
+
+##Associate TAXA
+taxonkit --data-dir ../DiamondDB/taxDMP/ lineage -i 2 HumanPapillomaRedund_DiaMond_NoDup.out > HumanPapillomaRedund_DiaMond_NoDup_withTaxa.m8
+
+
+
+#########################################################CREATING THE KRAKEN2 VIRAL DB##############################################################################
+After installing the kraken2 application, execute the following command:
+
+kraken2-build --download-library viral --db $DBNAME 
+
+[Replace "$DBNAME" above with your preferred database name/location. Please note that the database will use approximately 100 GB of disk space during creation, with the majority of that being reference sequences or taxonomy mapping information that can be removed after the build.]
+
+
+
+####################################################CREATING NCBI-RefSeq FOR BLASTDB#################################################################################
+After installing blastdb command tools, download the following files: 
+ref_viruses_rep_genomes.tar.gz [ wget -c https://ftp.ncbi.nih.gov/blast/db/ref_viruses_rep_genomes.tar.gz]
+taxdb.tar.gz	[wget -c https://ftp.ncbi.nih.gov/blast/db/taxdb.tar.gz]
+
+#Unzip you .gz files and execute the following command to create your BLASTDB database
+#makeblastdb -in viralseq_2021-12-14_14-45-53.fna -dbtype nucl -title ViralSeq -input_type fasta -out ViralSeq_2021-12-14 -taxid_map /mnt/NTFS/NGS-DBs/KrakenViral/#taxonomy/nucl_gb.accession2taxid -parse_seqids
+
+UPDATE JULY 2022: REPLACED BY 
+The makeblastdb has been the first approach to create the blastdb, later I preferred to use the one already done and easily to update.
+So, after downloading and un-compressing the gz files  (ref_viruses_rep_genomes.tar.gz, taxdb.tar.gz), the blastdb is already done. 
+You just need to set the environment like this:
+
+# Create directory:
+mkdir NCBIRefSeq
+
+# Move downloaded files in it:
+mv ref_viruses_rep_genomes.tar.gz NCBIRefSeq
+mv taxdb.tar.gz NCBIRefSeq
+
+# Pass variables to child process:
+export ref_viruses_rep_genomes=NCBIRefSeq/ref_viruses_rep_genomes
+
+# Setup the bastdb:
+blastdbcmd -info -db $ref_viruses_rep_genomes
+
+
+#Database: Refseq viruses representative genomes
+#14,999 sequences; 474,879,836 total bases
+#Date: Jun 3, 2022 7:15 AM
+
+
+Then, you have to run the following command to be sure your database correctly works:
+
+emilio@frodo:/remote-storage/DBs$ blastn -db blastdb/ref_viruses_rep_genomes -query /home/emilio/CAMISIM/viruses/genomes/Ippy01.fasta -evalue 1e-3 -word_size 11 -outfmt "6 std staxid staxids" | more
+NC_007905.1	NC_007905.1	100.000	3366	0	0	1	3366	1	3366	0.0	6216	55096	55096
+NC_007905.1	NC_007905.1	92.308	39	2	1	3329	3366	39	1	5.41e-05	54.7	55096	55096
+NC_007905.1	NC_007905.1	92.308	39	2	1	1	39	3366	3329	5.41e-05	54.7	55096	55096
+NC_007905.1	NC_007905.1	90.000	40	4	0	1550	1589	1589	1550	1.94e-04	52.8	55096	55096
+NC_007905.1	NC_038367.1	70.576	3317	842	110	50	3299	74	3323	7.16e-168	595	1518603	1518603
+NC_007905.1	NC_038367.1	95.000	40	1	1	1550	1589	1622	1584	3.23e-07	62.1	1518603	1518603
+NC_007905.1	NC_004296.1	69.951	2882	748	97	381	3212	3010	197	5.99e-114	416	11620	11620
+NC_007905.1	NC_004296.1	79.528	127	17	5	1	120	3401	3277	2.48e-13	82.4	11620	11620
+NC_007905.1	NC_004296.1	95.122	41	2	0	1549	1589	1817	1857	2.50e-08	65.8	11620	11620
+NC_007905.1	NC_004296.1	94.286	35	2	0	3332	3366	35	1	5.41e-05	54.7	11620	11620
+NC_007905.1	NC_006573.1	69.917	2882	749	96	378	3209	390	3203	2.78e-112	411	300180	300180
+NC_007905.1	NC_006573.1	79.839	124	16	5	1	117	2	123	2.48e-13	82.4	300180	300180
+NC_007905.1	NC_006573.1	95.122	41	2	0	1549	1589	1586	1546	2.50e-08	65.8	300180	300180
+NC_007905.1	NC_006573.1	94.286	35	2	0	3332	3366	3368	3402	5.41e-05	54.7	300180	300180
+NC_007905.1	NC_016152.1	73.171	1107	242	45	1089	2167	1101	2180	2.21e-93	348	883876	883876
+
+
+
+##################################################################CREATING SILVA DB##################################################################################
+
+# UPDATE JULY 2022 : 
+
+Since the release of sortmerna in v4, indexdb_rna is not necessary anymore and the index of the databases is done automatically. The indexes are stored in $HOME/sortmerna/run/idx. This index can be reused.
+Another directory kvdb is also created and must be emptied before each run/
+
+After installing sortmerna 4.3.4, you have to download the following files:
+wget -c https://www.arb-silva.de/fileadmin/silva_databases/current/Exports/SILVA_138.1_SSURef_tax_silva_trunc.fasta.gz
+wget -c https://www.arb-silva.de/fileadmin/silva_databases/current/Exports/SILVA_138.1_LSURef_tax_silva_trunc.fasta.gz
+gunzip SILVA_138.1*.gz
+
+##################################################################CREATING KAIJUDB#############################################################################
+
+Install kaiju:
+git clone https://github.com/bioinformatics-centre/kaiju.git
+
+sudo apt install libz-dev
+
+cd kaiju/src
+make
+
+mkdir kaijudb
+cd kaijudb
+kaiju-makedb -s viruses
+
