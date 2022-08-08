@@ -37,8 +37,14 @@ trimmedR1=$SampleName"_R1_trimmed.fq"
 trimmedR2=$SampleName"_R2_trimmed.fq"
 
 #Command to execute
-mv `basename $R1 .fq.gz`_val_1.fq $trimmedR1
-mv `basename $R2 .fq.gz`_val_2.fq $trimmedR2
+if [[ "$R1" == $.fq.gz ]]
+then
+  mv `basename $R1 .fq.gz`_val_1.fq $trimmedR1
+  mv `basename $R2 .fq.gz`_val_2.fq $trimmedR2
+else
+  mv `basename $R1 .fastq.gz`_val1.fq $trimmedR1
+  mv `basename $R2 .fastq.gz`_val2.fq $trimmedR2
+fi
 
 #echo "2. Executing Prinseq-lite"
 ##Remove short sequences using prinseq-lite

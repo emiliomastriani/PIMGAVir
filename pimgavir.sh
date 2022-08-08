@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# SLURM CLUSTER SPECIFIC PART - START
 ###################configuration slurm##############################
 # PIMGAVir
 #SBATCH --job-name=PIMGAVir
@@ -9,9 +10,9 @@
 #SBATCH --partition=normal
 #SBATCH --nodes=1
 #SBATCH --mem=16GB
-#SBATCH --cpu-per-task=12
+#SBATCH --cpus-per-task=12
 # Define email for script execution
-#SBATCH --mail-user=loic.talignani@ird.fr
+#SBATCH --mail-user=xxxxx@xxx.xx
 # Define type notifications (NONE, BEGIN, END, FAIL, ALL)
 #SBATCH --mail-type=ALL
 ###################################################################
@@ -52,7 +53,10 @@ module load bioinfo/seqkit/2.1.0 # 2.0.0 in article
 module load bioinfo/vsearch/2.21.1 # 2.18.0 in article
 
 # Run analysis
-cd pimgavir
+cd pimgavir/scripts/
+
+# SLURM CLUSTER SPECIFIC PART - END
+
 
 ##Versioning
 version="PIMGAVir V.1.1 -- 20.04.2022"
@@ -63,12 +67,12 @@ R2=$2 				#R2.fastq.gz
 SampleName=$3	#Name associated to the sample
 JTrim=$4			#Number of cores to use
 
-##Reads-filtering parameters
+##Reads-filtering parameters: change the path to the databases:
 filter=${@: -1}	#Filter option (boolean: if specified the filter step will be done, otherwise not)
-DiamondDB="/DBs/Diamond-RefSeqProt/refseq_protein_nonredund_diamond.dmnd"
+DiamondDB="/DBs/Diamond-RefSeqProt/refseq_protein_nonredund_diamond.dmnd" # CHANGE THIS PATH
 OutDiamondDB="blastx_diamond.m8"
 InputDB=$SampleName"_not_rRNA.fq"
-PathToRefSeq="/DBs/NCBIRefSeq" # Changed RefSeq in NCBIRefSeq
+PathToRefSeq="/DBs/NCBIRefSeq" # CHANGE THIS PATH
 UnWanted="unwanted.txt"
 
 ##Assembly parameters
@@ -289,3 +293,6 @@ if [ $5 == 'ALL' ];
 		    	esac
 		done
 fi
+
+# Purge sortmerna/kvdb directory
+rm -rf sortmerna/kvdb/*
