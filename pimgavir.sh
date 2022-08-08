@@ -32,7 +32,10 @@ PATH_TO_SAVE="nas3:/data3/projects/evomics/pimgavir-output"
 # Copy to the scratch directory
 scp -r nas3:/data3/projects/evomics/pimgavir/ ${SCRATCH_DIRECTORY}
 
-# charger le logiciel a utiliser
+# Purge and load programs
+
+module purge
+
 module load bioinfo/TrimGalore/0.6.5
 module load bioinfo/sortmerna/4.3.4
 module load bioinfo/diamond/2.0.11
@@ -181,12 +184,12 @@ fi
 assembly_func(){
 	printf "Calling Assemby-based taxonomy task\n and using $JTrim threads"
 	echo -e "$(date) Calling Assembly-based taxonomy task\n" >> $logfile 2>&1
-		assembly.sh $sequence_data assembly-based $JTrim &&
+		./assembly.sh $sequence_data assembly-based $JTrim &&
 		{
-			taxonomy.sh $megahit_contigs_improved assembly-based-taxonomy $JTrim _MEGAHIT &&
-	   		krona-blast.sh $spades_contigs_improved assembly-based-SPADES-KRONA-BLAST $JTrim
-	   		taxonomy.sh $spades_contigs_improved assembly-based-taxonomy $JTrim  _SPADES &&
-	   		krona-blast.sh $megahit_contigs_improved assembly-based-MEGAHIT-KRONA-BLAST $JTrim
+			./taxonomy.sh $megahit_contigs_improved assembly-based-taxonomy $JTrim _MEGAHIT &&
+	   		./krona-blast.sh $spades_contigs_improved assembly-based-SPADES-KRONA-BLAST $JTrim
+	   		./taxonomy.sh $spades_contigs_improved assembly-based-taxonomy $JTrim  _SPADES &&
+	   		./krona-blast.sh $megahit_contigs_improved assembly-based-MEGAHIT-KRONA-BLAST $JTrim
 	   	}
 
 }
@@ -194,9 +197,9 @@ assembly_func(){
 clustering_func(){
 	printf "Calling Clustering-based taxonomy task\n and using $JTrim threads"
 	echo -e "$(date) Calling Clustering-based taxonomy task\n" >> $logfile 2>&1
-		clustering.sh $sequence_data clustering-based $JTrim &&
-		taxonomy.sh $OTUDB clustering-based-taxonomy $JTrim _OTU &&
-		krona-blast.sh $OTUDB clustering-based-KRONA-BLAST $JTrim
+		./clustering.sh $sequence_data clustering-based $JTrim &&
+		./taxonomy.sh $OTUDB clustering-based-taxonomy $JTrim _OTU &&
+		./krona-blast.sh $OTUDB clustering-based-KRONA-BLAST $JTrim
 }
 
 echo "Starting process..."
@@ -211,7 +214,7 @@ if [ -f "$NotrRNAReads" ];
     	else
 	  	echo "Calling pre-process task"
 		echo -e "$(date) Calling pre-process task\n" >> $logfile 2>&1
-		pre-process.sh $R1 $R2 $SampleName $JTrim
+		./pre-process.sh $R1 $R2 $SampleName $JTrim
 fi
 
 ##Check for reads-filtering task
@@ -225,7 +228,7 @@ case $filter in
 	  			if [ ! -f "$sequence_data" ]; then
 		  			echo "Calling reads-filtering task"
 					echo -e "$(date) Calling reads-filtering task\n" >> $logfile 2>&1 ##;; ##add or remove ;; when when re-activate or deactivate the filtering step
-					reads-filtering.sh $DiamondDB $JTrim $InputDB $OutDiamondDB $PathToRefSeq $UnWanted
+					./reads-filtering.sh $DiamondDB $JTrim $InputDB $OutDiamondDB $PathToRefSeq $UnWanted
 				else
 					printf 'File %s already exists, skipping reads-filtering step \n' "$sequence_data"
     					printf 'File %s already exists, skipping reads-filtering step \n' "$sequence_data" >> $logfile 2>&1
@@ -253,7 +256,7 @@ if [ $5 == 'ALL' ];
 		##Call read-based taxonomy classification
 		printf "Calling Read-based taxonomy task and using $JTrim threads"
 		echo -e "$(date) Calling Read-based taxonomy task \n" >> $logfile 2>&1
-		taxonomy.sh $sequence_data read-based-taxonomy $JTrim _READ & ##It will run in bg mode
+		./taxonomy.sh $sequence_data read-based-taxonomy $JTrim _READ & ##It will run in bg mode
 
 		##Call assembly-based taxonomy classification
 		assembly_func & ##It will run in bg mode
@@ -269,9 +272,9 @@ if [ $5 == 'ALL' ];
 		  	("--read_based")
 		    		printf "Executing Read-based taxonomy process \n"
 		    		echo -e "$(date) Calling Read-based taxonomy task\n" >> $logfile 2>&1
-		    		taxonomy.sh $sequence_data read-based-taxonomy $JTrim _READ
+		    		./taxonomy.sh $sequence_data read-based-taxonomy $JTrim _READ
 		    		seqkit fq2fa $sequence_data > readsToblastn.fasta
-		    		krona-blast.sh readsToblastn.fasta read-based-KRONA-BLAST $JTrim
+		    		./krona-blast.sh readsToblastn.fasta read-based-KRONA-BLAST $JTrim
 		    		i=$((i + 1 ))
 		    		shift 1;;
 		    	("--ass_based")
@@ -295,4 +298,4 @@ if [ $5 == 'ALL' ];
 fi
 
 # Purge sortmerna/kvdb directory
-rm -rf sortmerna/kvdb/*
+rm -rf sortmeRNA_wd/kvdb/*
