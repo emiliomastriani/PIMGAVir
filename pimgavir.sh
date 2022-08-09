@@ -35,10 +35,9 @@ scp -r nas3:/data3/projects/evomics/pimgavir/ ${SCRATCH_DIRECTORY}
 # Purge and load programs
 
 module purge
-
+module load bioinfo/diamond/2.0.11 # conflict with Perl's TrimGalore dependency: run first
 module load bioinfo/TrimGalore/0.6.5
 module load bioinfo/sortmerna/4.3.4
-module load bioinfo/diamond/2.0.11
 module load bioinfo/kronatools/2.8.1
 module load bioinfo/taxonkit/0.9.0 # 0.10.1 in article
 module load bioinfo/seqtk/1.3-r106
@@ -60,6 +59,9 @@ cd pimgavir/scripts/
 
 # SLURM CLUSTER SPECIFIC PART - END
 
+
+# Purge sortmerna/kvdb directory
+rm -rf sortmeRNA_wd/kvdb/*
 
 ##Versioning
 version="PIMGAVir V.1.1 -- 20.04.2022"
@@ -297,5 +299,13 @@ if [ $5 == 'ALL' ];
 		done
 fi
 
-# Purge sortmerna/kvdb directory
-rm -rf sortmeRNA_wd/kvdb/*
+# Save work
+cd ..
+scp -r scripts/ $PATH_TO_SAVE
+
+# Delete SCRATCH
+
+cd /scratch
+rm -rf talignani-$SLURM_JOB_ID
+
+seff $SLURM_JOB_ID
