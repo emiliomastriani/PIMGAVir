@@ -1,18 +1,17 @@
 #!/bin/bash
 
-# SLURM CLUSTER SPECIFIC PART - START
 ###################configuration slurm##############################
 # PIMGAVir
 #SBATCH --job-name=PIMGAVir
-#SBATCH --output=pimgavir.%A_%a.out
-#SBATCH --error=pimgavir.%A_%a.err
+#SBATCH --output=pimgavir.%A.out
+#SBATCH --error=pimgavir.%A.err
 #SBATCH --time=5-23:00:00
 #SBATCH --partition=highmemplus
 #SBATCH --nodes=1
 #SBATCH --mem=128GB
-#SBATCH --cpus-per-task=22
+#SBATCH -c 22
 # Define email for script execution
-#SBATCH --mail-user=xxxxx@xxx.xx
+#SBATCH --mail-user=loic.talignani@ird.fr
 # Define type notifications (NONE, BEGIN, END, FAIL, ALL)
 #SBATCH --mail-type=ALL
 ###################################################################
@@ -32,10 +31,10 @@ PATH_TO_SAVE="nas3:/data3/projects/evomics/pimgavir-output"
 # Copy to the scratch directory
 scp -r nas3:/data3/projects/evomics/pimgavir/ ${SCRATCH_DIRECTORY}
 
-# Purge and load programs
-
+# purge and load the programs
 module purge
-module load bioinfo/diamond/2.0.11 # conflict with Perl's TrimGalore dependency: run first
+
+module load bioinfo/diamond/2.0.11
 module load bioinfo/TrimGalore/0.6.5
 module load bioinfo/sortmerna/4.3.4
 module load bioinfo/kronatools/2.8.1
@@ -50,16 +49,14 @@ module load bioinfo/pilon/1.23
 module load bioinfo/prokka/1.14.6
 module load bioinfo/kraken2/2.1.1 # 2.1.2 in article
 module load bioinfo/kaiju/1.8.0 # 1.8.2 in article
-#module load bioinfo/blast/2.10.0+ # 2.9.0+ in article # conflict with Blast 2.8.1+ already called by Diamond
+# module load bioinfo/blast/2.10.0+ # 2.9.0+ in article, blast 2.8.1+ already called by diamond 2.0.11
 module load bioinfo/seqkit/2.1.0 # 2.0.0 in article
 module load bioinfo/vsearch/2.21.1 # 2.18.0 in article
 
 # Run analysis
 cd pimgavir/scripts/
 
-# SLURM CLUSTER SPECIFIC PART - END
-
-# Purge sortmerna/kvdb directory
+# Purge sortmeRNA_wd kvdb directory
 rm -rf sortmeRNA_wd/kvdb/*
 
 ##Versioning
@@ -71,20 +68,20 @@ R2=$2 				#R2.fastq.gz
 SampleName=$3	#Name associated to the sample
 JTrim=$4			#Number of cores to use
 
-##Reads-filtering parameters: change the path to the databases:
+##Reads-filtering parameters
 filter=${@: -1}	#Filter option (boolean: if specified the filter step will be done, otherwise not)
-DiamondDB="../DBs/Diamond-RefSeqProt/refseq_protein_nonredund_diamond.dmnd" # CHANGE THIS PATH
+DiamondDB="../DBs/Diamond-RefSeqProt/refseq_protein_nonredund_diamond.dmnd"
 OutDiamondDB="blastx_diamond.m8"
 InputDB=$SampleName"_not_rRNA.fq"
-PathToRefSeq="../DBs/NCBIRefSeq" # CHANGE THIS PATH
+PathToRefSeq="../DBs/NCBIRefSeq" # Changed RefSeq in NCBIRefSeq
 UnWanted="unwanted.txt"
 
 ##Assembly parameters
-megahit_contigs_improved="assembly-based/megahit_contigs_improved.fasta" 	# ASKED EMILIO FOR THIS PART
-spades_contigs_improved="assembly-based/spades_contigs_improved.fasta"		# ASKED EMILIO FOR THIS PART
+megahit_contigs_improved="assembly-based/megahit_contigs_improved.fasta"
+spades_contigs_improved="assembly-based/spades_contigs_improved.fasta"
 
 ##Clustering parameters
-OTUDB="clustering-based/otus.fasta"																				# ASKED EMILIO FOR THIS PART
+OTUDB="clustering-based/otus.fasta"
 
 PassedArgs=$#   							#Number of passed arguments
 NumOfArgs=4										#At least 4 parameters are needed
@@ -298,13 +295,20 @@ if [ $5 == 'ALL' ];
 		done
 fi
 
-# Save work
+# Delete input files and save work
+
+rm -rf $R1
+rm -rf $R2
+
 cd ..
+
 scp -r scripts/ $PATH_TO_SAVE
 
-# Delete SCRATCH
+# Delete scratch
 
 cd /scratch
+
 rm -rf talignani-$SLURM_JOB_ID
+
 
 seff $SLURM_JOB_ID

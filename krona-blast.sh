@@ -3,18 +3,18 @@
 #Usage krona-blast.sh sequence.fasta KBDir NumbOfCores
 #As an example: time ./krona-blast.sh readsNotrRNA_filtered.fq FKDL210225623 24
 merged_seq=$1 		#readsNotrRNA_filtered.fasta
-KBDir=$2		#Krona-Blast folder
-JTrim=$3		#Number of cores to use 
+KBDir=$2		      #Krona-Blast folder
+JTrim=$3		      #Number of cores to use
 
 NumOfArgs=3
 logfile=$KBDir"/krona-blast.log"
-ref_viruses_rep_genomes="/remote-storage/blastdb/ref_viruses_rep_genomes"
+ref_viruses_rep_genomes="../DBs/NCBIRefSeq/ref_viruses_rep_genomes"
 blast_out=$KBDir"/blastn.out"
 krona_tax_list=$KBDir"/krona_tax.lst"
 krona_out=$KBDir"/krona_out.html"
 krona_stdout=$KBDir"/krona_stdout"
 krona_stderr=$KBDir"/krona_stderr"
-krona="/usr/local/bin/ktImportTaxonomy"
+krona="./ktImportTaxonomy"
 merged_seq_aln=$KBDir"/sequences_aln"
 merged_seq_aln_tree=$KBDir"/"$merged_seq_aln".tree"
 
@@ -35,7 +35,6 @@ fi
 
 #Build Phylo-blast-dir
 mkdir $KBDir
-
 
 echo "Starting process..."
 
@@ -60,3 +59,4 @@ ${krona} \
 ${krona_tax_list} \
 1> ${krona_stdout} \
 2> ${krona_stderr}
+echo "Done"
