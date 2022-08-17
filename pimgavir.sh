@@ -7,10 +7,10 @@
 #SBATCH --output=pimgavir.%A_%a.out
 #SBATCH --error=pimgavir.%A_%a.err
 #SBATCH --time=5-23:00:00
-#SBATCH --partition=normal
+#SBATCH --partition=highmemplus
 #SBATCH --nodes=1
-#SBATCH --mem=16GB
-#SBATCH --cpus-per-task=12
+#SBATCH --mem=128GB
+#SBATCH --cpus-per-task=22
 # Define email for script execution
 #SBATCH --mail-user=xxxxx@xxx.xx
 # Define type notifications (NONE, BEGIN, END, FAIL, ALL)
@@ -50,7 +50,7 @@ module load bioinfo/pilon/1.23
 module load bioinfo/prokka/1.14.6
 module load bioinfo/kraken2/2.1.1 # 2.1.2 in article
 module load bioinfo/kaiju/1.8.0 # 1.8.2 in article
-module load bioinfo/blast/2.10.0+ # 2.9.0+ in article
+#module load bioinfo/blast/2.10.0+ # 2.9.0+ in article # conflict with Blast 2.8.1+ already called by Diamond
 module load bioinfo/seqkit/2.1.0 # 2.0.0 in article
 module load bioinfo/vsearch/2.21.1 # 2.18.0 in article
 
@@ -58,7 +58,6 @@ module load bioinfo/vsearch/2.21.1 # 2.18.0 in article
 cd pimgavir/scripts/
 
 # SLURM CLUSTER SPECIFIC PART - END
-
 
 # Purge sortmerna/kvdb directory
 rm -rf sortmeRNA_wd/kvdb/*
@@ -74,10 +73,10 @@ JTrim=$4			#Number of cores to use
 
 ##Reads-filtering parameters: change the path to the databases:
 filter=${@: -1}	#Filter option (boolean: if specified the filter step will be done, otherwise not)
-DiamondDB="/DBs/Diamond-RefSeqProt/refseq_protein_nonredund_diamond.dmnd" # CHANGE THIS PATH
+DiamondDB="../DBs/Diamond-RefSeqProt/refseq_protein_nonredund_diamond.dmnd" # CHANGE THIS PATH
 OutDiamondDB="blastx_diamond.m8"
 InputDB=$SampleName"_not_rRNA.fq"
-PathToRefSeq="/DBs/NCBIRefSeq" # CHANGE THIS PATH
+PathToRefSeq="../DBs/NCBIRefSeq" # CHANGE THIS PATH
 UnWanted="unwanted.txt"
 
 ##Assembly parameters
