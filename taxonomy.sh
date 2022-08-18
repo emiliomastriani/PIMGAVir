@@ -24,7 +24,7 @@ else
 fi
 
 ##Making folder for storing results
-mkdir $OutDir
+mkdir $OutDir 
 
 
 ##Taxonomy classification with KRAKEN and SILVA db

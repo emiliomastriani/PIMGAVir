@@ -53,6 +53,11 @@ module load bioinfo/kaiju/1.8.0 # 1.8.2 in article
 module load bioinfo/seqkit/2.1.0 # 2.0.0 in article
 module load bioinfo/vsearch/2.21.1 # 2.18.0 in article
 
+# Activate conda environment
+unset PYTHONPATH
+source ${HOME}/miniconda3/etc/profile.d/conda.sh
+conda activate pimgavir_env
+
 # Run analysis
 cd pimgavir/scripts/
 
@@ -308,7 +313,6 @@ scp -r scripts/ $PATH_TO_SAVE
 
 cd /scratch
 
-rm -rf talignani-$SLURM_JOB_ID
-
-
 seff $SLURM_JOB_ID
+
+rm -rf talignani_$SLURM_JOB_ID

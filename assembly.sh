@@ -97,22 +97,22 @@ bowtie2-build $spades_out/contigs.fasta $idx_bowtie/$spades_contigs_idx
 
 #Create BAM file
 echo -e "$(date) Create bam file [bowtie2 -x] from megahit assembly" >> $logfile 2>&1
-bowtie2 -x $idx_bowtie/$megahit_contigs_idx -1 $wd/Forward.fq -2 $wd/Reverse.fq -p $JTrim | samtools view -bS -o $megahit_contigs_bam
+bowtie2 -x $idx_bowtie/$megahit_contigs_idx -1 $wd/Forward.fq -2 $wd/Reverse.fq -p $JTrim | samtools view -bS -o $megahit_contigs_bam -@ $JTrim
 echo -e "$(date) Create bam file [bowtie2 -x] from spades assembly" >> $logfile 2>&1
-bowtie2 -x $idx_bowtie/$spades_contigs_idx -1 $wd/Forward.fq -2 $wd/Reverse.fq -p $JTrim | samtools view -bS -o $spades_contigs_bam
+bowtie2 -x $idx_bowtie/$spades_contigs_idx -1 $wd/Forward.fq -2 $wd/Reverse.fq -p $JTrim | samtools view -bS -o $spades_contigs_bam -@ $JTrim
 
 #Sort bam files
 echo -e "$(date) Sort bam file [samtools sort] from megahit assembly" >> $logfile 2>&1
-samtools sort $megahit_contigs_bam -o $megahit_contigs_sorted_bam #-nthreads=$JTrim
+samtools sort $megahit_contigs_bam -o $megahit_contigs_sorted_bam -@ $JTrim
 echo -e "$(date) Sort bam file [samtools sort] from spades assembly" >> $logfile 2>&1
-samtools sort $spades_contigs_bam -o $spades_contigs_sorted_bam #-nthreads=$JTrim
+samtools sort $spades_contigs_bam -o $spades_contigs_sorted_bam -@ $JTrim
 
 #Index bam files
 #NB: in case of ERROR --> maybe files created with $JTrim cause troubles
 echo -e "$(date) Indexing bam file [samtools index] from megahit assembly" >> $logfile 2>&1
-samtools index $megahit_contigs_sorted_bam
+samtools index $megahit_contigs_sorted_bam -@ $JTrim
 echo -e "$(date) Indexing bam file [samtools index] from spades assembly" >> $logfile 2>&1
-samtools index $spades_contigs_sorted_bam
+samtools index $spades_contigs_sorted_bam -@ $JTrim
 
 #Improve contigs.fasta
 echo -e "$(date) Improve contigs file [pilon] from megahit contigs" >> $logfile 2>&1
@@ -133,11 +133,11 @@ echo -e "$(date) Gene annotation using PROKKA" >> $logfile 2>&1
 #Gene annotation
 #Using PROKKA, Viruses genus on Contigs from spades
 echo -e "$(date) Gene annotation: Using PROKKA, Viruses genus on Contigs from spades" >> $logfile 2>&1
-prokka $spades_contigs_improved".fasta" --usegenus Viruses --out $spades_prokka --centre X --compliant --prefix spades_prokka --force
+prokka $spades_contigs_improved".fasta" --usegenus Viruses --out $spades_prokka --centre X --compliant --prefix spades_prokka --force --cpus $JTrim
 
 #Using PROKKA, Viruses genus on Contigs from megahit
 echo -e "$(date) Gene annotation: Using PROKKA, Viruses genus on Contigs from megahit" >> $logfile 2>&1
-prokka $megahit_contigs_improved".fasta" --usegenus Viruses --out $megahit_prokka --prefix megahit_prokka --force
+prokka $megahit_contigs_improved".fasta" --usegenus Viruses --out $megahit_prokka --prefix megahit_prokka --force --cpus $JTrim
 
 #Use artemis to visualize the Gene annotation
 ##For example art $megahit_prokka.gbk
