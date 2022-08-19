@@ -8,7 +8,6 @@ logfile="taxonomy.log"
 NumOfArgs=4
 
 ##Checking the number of arguments
-##Checking the number of arguments
 if (( $# < $NumOfArgs ))
 then
     printf "%b" "Error. Not enough arguments.\n" >&2
@@ -24,22 +23,7 @@ else
 fi
 
 ##Making folder for storing results
-mkdir $OutDir 
-
-
-##Taxonomy classification with KRAKEN and SILVA db
-#KrakenSilvaDB="/mnt/NTFS/NGS-DBs/KrakenDB"
-#krakenSilvaOut=$OutDir"/krakSilva.out"$Assembler
-#krakenSilvaClassified=$OutDir"/krakSilva_class.out"$Assembler
-#krakenSilvaUnClassified=$OutDir"/krakSilva_unclass.out"$Assembler
-#krakenSilvaReport=$OutDir"/krakSilva_report.out"$Assembler
-
-#echo -e "$(date) Run taxonomy classification (Kraken/SILVA) with the following parameters: \n" >> $logfile 2>&1
-#echo -e "$(date) $KrakenSilvaDB $FilteredReads $krakenSilvaOut $krakenSilvaClassified $krakenSilvaUnClassified \n" >> $logfile 2>&1
-#kraken2 --use-names --db $KrakenSilvaDB $FilteredReads --output $krakenSilvaOut --classified-out $krakenSilvaClassified --unclassified-out $krakenSilvaUnClassified --report $krakenSilvaReport
-
-##Taxonomy classification with KRAKEN and RefSeq viral db
-#KrakenViralDB="/mnt/NTFS/NGS-DBs/MiniKraken/minikraken_8GB_20200312" ##Using minikraken 8G, 5%
+mkdir $OutDir
 KrakenViralDB="/DBs/KrakenViral"
 krakenViralOut=$OutDir"/krakViral.out"$Assembler
 krakenViralClassified=$OutDir"/krakViral_class.out"$Assembler
@@ -53,13 +37,6 @@ kraken2 --db $KrakenViralDB $FilteredReads --output $krakenViralOut --classified
 echo -e "$(date) Create Krona reports in html format: \n" >> $logfile 2>&1
 cat $krakenViralOut | cut -f 2,3 > $OutDir"/krakViral.krona"$Assembler
 ktImportTaxonomy $OutDir"/krakViral.krona"$Assembler -o $OutDir"/krakViral.krona.html"$Assembler
-
-#cat $OutDir"/krakSilva.out" | cut -f 2,3 > $OutDir"/krakSilva.krona"$Assembler
-#ktImportTaxonomy $OutDir"/krakSilva.krona"$Assembler -o $OutDir"/krakSilva.krona.html"$Assembler
-
-echo -e "$(date) Create BRAKEN reports in tab format: \n" >> $logfile 2>&1
-#krakenViralBracken="krakenViral_Bracken.out"
-#bracken -d $KrakenViralDB -i $krakenViralReport -o $krakenViralBracken
 
 ##Taxonomy classification with Kaiju and VIRUSES db
 kaijuNodes="/usr/share/NANOPORE-PKGs/kaiju/kaijudb/nodes.dmp"

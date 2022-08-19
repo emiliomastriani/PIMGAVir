@@ -11,7 +11,7 @@
 #SBATCH --mem=128GB
 #SBATCH -c 22
 # Define email for script execution
-#SBATCH --mail-user=loic.talignani@ird.fr
+#SBATCH --mail-user=XXXXXX@XXX.XXX
 # Define type notifications (NONE, BEGIN, END, FAIL, ALL)
 #SBATCH --mail-type=ALL
 ###################################################################
@@ -304,6 +304,14 @@ fi
 
 rm -rf $R1
 rm -rf $R2
+rm *.sh
+rm taxonomy.tab
+rm concatenate_reads.py
+rm README.md
+rm ktImportTaxonomy
+rm ktImportText
+rm -rf KronaTools
+rm KronaTools.pm
 
 cd ..
 
