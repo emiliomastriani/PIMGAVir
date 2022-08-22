@@ -79,6 +79,7 @@ dependencies:
   - libidn2=2.3.3=h166bdaf_0
   - liblapack=3.9.0=15_linux64_openblas
   - libnghttp2=1.46.0=hce63b2e_0
+  - libnsl=2.0.0=h7f98852_0
   - libopenblas=0.3.20=pthreads_h78a6416_1
   - libpng=1.6.37=h753d276_3
   - libssh2=1.10.0=h8f2d780_0
@@ -102,8 +103,9 @@ dependencies:
   - parallel=20160622=1
   - pbzip2=1.1.13=0
   - pcre=8.45=h9c3ff4c_0
-  - perl=5.32.1=0_h7f98852_perl5
+  - perl=5.32.1=2_h7f98852_perl5
   - perl-algorithm-diff=1.1903=pl5321hdfd78af_3
+  - perl-app-cpanminus=1.7046=pl5321hd8ed1ab_0
   - perl-archive-tar=2.40=pl5321hdfd78af_0
   - perl-autoloader=5.74=pl5321hdfd78af_3
   - perl-base=2.23=pl5321hdfd78af_2
@@ -219,7 +221,6 @@ dependencies:
   - pip=21.2.4=py39h06a4308_0
   - popt=1.16=1
   - prodigal=2.6.3=hec16e2b_4
-  - prokka=1.13=2
   - pycosat=0.6.3=py39h27cfd23_0
   - pycparser=2.21=pyhd3eb1b0_0
   - pyopenssl=22.0.0=pyhd3eb1b0_0
@@ -263,4 +264,6 @@ dependencies:
   - yaml=0.2.5=h7b6447c_0
   - zlib=1.2.12=h7f8727e_1
   - zstd=1.5.2=h8a70e8d_3
+  - pip:
+    - biopython==1.79
 prefix: /home/talignani/miniconda3/envs/pimgavir_env

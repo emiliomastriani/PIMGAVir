@@ -8,10 +8,10 @@
 #SBATCH --time=5-23:00:00
 #SBATCH --partition=highmemplus
 #SBATCH --nodes=1
-#SBATCH --mem=128GB
+#SBATCH --mem=200GB
 #SBATCH -c 22
 # Define email for script execution
-#SBATCH --mail-user=XXXXXX@XXX.XXX
+#SBATCH --mail-user=loic.talignani@ird.fr
 # Define type notifications (NONE, BEGIN, END, FAIL, ALL)
 #SBATCH --mail-type=ALL
 ###################################################################
@@ -34,7 +34,7 @@ scp -r nas3:/data3/projects/evomics/pimgavir/ ${SCRATCH_DIRECTORY}
 # purge and load the programs
 module purge
 
-module load bioinfo/diamond/2.0.11
+module load bioinfo/diamond/2.0.11 
 module load bioinfo/TrimGalore/0.6.5
 module load bioinfo/sortmerna/4.3.4
 module load bioinfo/kronatools/2.8.1
@@ -52,6 +52,7 @@ module load bioinfo/kaiju/1.8.0 # 1.8.2 in article
 # module load bioinfo/blast/2.10.0+ # 2.9.0+ in article, blast 2.8.1+ already called by diamond 2.0.11
 module load bioinfo/seqkit/2.1.0 # 2.0.0 in article
 module load bioinfo/vsearch/2.21.1 # 2.18.0 in article
+
 
 # Activate conda environment
 unset PYTHONPATH
@@ -321,6 +322,11 @@ scp -r scripts/ $PATH_TO_SAVE
 
 cd /scratch
 
+rm -rf talignani_$SLURM_JOB_ID
+
+
 seff $SLURM_JOB_ID
 
-rm -rf talignani_$SLURM_JOB_ID
+
+
+
