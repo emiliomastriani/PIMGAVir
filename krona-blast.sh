@@ -8,13 +8,14 @@ JTrim=$3		      #Number of cores to use
 
 NumOfArgs=3
 logfile=$KBDir"/krona-blast.log"
+# NCBI viral RefSeq for blasn:
 ref_viruses_rep_genomes="../DBs/NCBIRefSeq/ref_viruses_rep_genomes"
 blast_out=$KBDir"/blastn.out"
 krona_tax_list=$KBDir"/krona_tax.lst"
 krona_out=$KBDir"/krona_out.html"
 krona_stdout=$KBDir"/krona_stdout"
 krona_stderr=$KBDir"/krona_stderr"
-krona="ktImportTaxonomy"
+krona=${HOME}"/miniconda3/bin/ktImportTaxonomy"
 merged_seq_aln=$KBDir"/sequences_aln"
 merged_seq_aln_tree=$KBDir"/"$merged_seq_aln".tree"
 
@@ -38,26 +39,23 @@ mkdir $KBDir
 
 echo "Starting process..."
 
-echo "1. Executing blastn operation"
+echo "3. EXECUTING blastn OPERATION"
 echo -e "$(date) Executing blastn with the following arguments: fasta file is $merged_seq , number of threads is $JTrim" > $logfile 2>&1
 
 blastn -db $ref_viruses_rep_genomes -query $merged_seq -evalue 1e-3 -word_size 11 -outfmt "6 std staxid staxids" -num_threads $JTrim > $blast_out || exit 77
 
 ## Extract NCBI taxon IDs from BLAST output
-echo "2. Extract NCBI taxon IDs from BLAST output"
+echo "4. EXTRACT NCBI TAXON IDs FROM BLAST OUTPUT"
 echo -e "$(date) Extract NCBI taxon IDs from BLAST output with the following arguments: blast out file is $blast_out , krona tax list file is $krona_tax_list" >> $logfile 2>&1
 
 awk -F'[;\t]' '!seen[$1,$13]++' ${blast_out} \
 | awk '{print $1 "\t" $13}' \
 > ${krona_tax_list}
 
-echo "3. Create Krona plot, specifying output filename"
+echo "5. CREATE Krona plot, SPECIFYING OUTPUT FILENAME"
 echo -e "$(date) Create Krona plot, specifying output filename with the following arguments: krona out file is $krona_out" >> $logfile 2>&1
+
 ## Create Krona plot, specifying output filename
-#${krona} \
-ktImportTaxonomy \
--o ${krona_out} \
-${krona_tax_list} \
-1> ${krona_stdout} \
-2> ${krona_stderr} || exit 76
-echo "Done"
+${krona} -o ${krona_out} ${krona_tax_list} 1> ${krona_stdout} 2> ${krona_stderr}
+
+echo "Blastn and Krona plot Done"

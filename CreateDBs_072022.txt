@@ -199,7 +199,26 @@ NC_007905.1	NC_016152.1	73.171	1107	242	45	1089	2167	1101	2180	2.21e-93	348	8838
 
 
 
-##################################################################CREATING SILVA DB##################################################################################
+################################################################## CREATING SILVA DB FOR SORTMERNA ##################################################################################
+
+# UPDATE SEPTEMBER 2022 :
+
+SortMeRNA v. 4.3.4 already have compiled databases. These can be found in /data/rRNA_databases
+
+Most recent database can be downloaded here :
+
+https://github.com/biocore/sortmerna/releases/download/v4.3.4/database.tar.gz
+
+Once untar, the archive contain four different files smr_v4.3*.fasta
+
+The main difference between the original databases distributed with SMR and the new ones is the updated SILVA and RFAM databases were used (e.g. SILVA 138). We took SILVA 138 SSURef NR99, SILVA 138 LSURef and latest RFAM and clustered them at different thresholds to render new SMR databases:
+
+fast: bac-16S 85%, 5S & 5.8S RFAM seeds, rest 90%
+default: bac-16S 90%, 5S & 5.8S RFAM seeds, rest 95%
+sensitive: all 97%
+
+All SMR databases have minimum 99.8% accuracy, therefore we normally suggest the fast or default versions.
+
 
 # UPDATE JULY 2022 : 
 

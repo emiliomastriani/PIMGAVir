@@ -8,8 +8,8 @@
 #SBATCH --time=5-23:00:00
 #SBATCH --partition=highmemplus
 #SBATCH --nodes=1
-#SBATCH --mem=200GB
-#SBATCH -c 22
+#sbatch --cpus-per-task=48
+#SBATCH --mem=288GB
 # Define email for script execution
 #SBATCH --mail-user=loic.talignani@ird.fr
 # Define type notifications (NONE, BEGIN, END, FAIL, ALL)
@@ -28,13 +28,18 @@ cd ${SCRATCH_DIRECTORY}/
 # Save directory
 PATH_TO_SAVE="nas3:/data3/projects/evomics/pimgavir-output"
 
+echo "Copy data to the scratch directory"
 # Copy to the scratch directory
 scp -r nas3:/data3/projects/evomics/pimgavir/ ${SCRATCH_DIRECTORY}
 
+echo "Done"
+
+echo "Load modules"
 # purge and load the programs
 module purge
 
-module load bioinfo/diamond/2.0.11 
+#module load system/perl/5.16.3
+#module load bioinfo/diamond/2.0.11 
 module load bioinfo/TrimGalore/0.6.5
 module load bioinfo/sortmerna/4.3.4
 module load bioinfo/kronatools/2.8.1
@@ -53,17 +58,22 @@ module load bioinfo/kaiju/1.8.0 # 1.8.2 in article
 module load bioinfo/seqkit/2.1.0 # 2.0.0 in article
 module load bioinfo/vsearch/2.21.1 # 2.18.0 in article
 
+echo "Done"
 
+echo "Activate conda environment"
 # Activate conda environment
 unset PYTHONPATH
 source ${HOME}/miniconda3/etc/profile.d/conda.sh
 conda activate pimgavir_env
 
+echo "Done"
+
 # Run analysis
 cd pimgavir/scripts/
 
-# Purge sortmeRNA_wd kvdb directory
+# Purge sortmeRNA_wd kvdb and readb directories
 rm -rf sortmeRNA_wd/kvdb/*
+rm -rf sortmeRNA_wd/readb/*
 
 ##Versioning
 version="PIMGAVir V.1.1 -- 20.04.2022"
@@ -228,7 +238,7 @@ case $filter in
 				echo -e "$UnWanted file found, moving ahead \n" >> $logfile 2>&1
 				echo -e "$UnWanted file found, moving ahead \n"
 	  			max=$(($#-1)) ##Setting the current number of arguments
-	  			sequence_data="readsNotrRNA_filtered.fq" ##Setting the sequence name to be analyzed
+	  			sequence_data="readsNotrRNA_filtered.fq.gz" ##Setting the sequence name to be analyzed ---added .gz
 	  			if [ ! -f "$sequence_data" ]; then
 		  			echo "Calling reads-filtering task"
 					echo -e "$(date) Calling reads-filtering task\n" >> $logfile 2>&1 ##;; ##add or remove ;; when when re-activate or deactivate the filtering step
@@ -245,7 +255,7 @@ case $filter in
  			;;
   	(*)
   			max=$# ##Setting the current number of arguments
-  			sequence_data=$SampleName"_not_rRNA.fq"
+  			sequence_data=$SampleName"_not_rRNA.fq.gz" # ---added .gz
   			echo "Filtering not activated, moving to next task";;
 esac
 
@@ -303,26 +313,23 @@ fi
 
 # Delete input files and save work
 
+echo "Data transfer node -> nas3"
 rm -rf $R1
 rm -rf $R2
 rm *.sh
 rm taxonomy.tab
 rm concatenate_reads.py
 rm README.md
-rm ktImportTaxonomy
-rm ktImportText
-rm -rf KronaTools
-rm KronaTools.pm
+rm -rf sortmeRNA_wd/kvdb/*
+rm -rf sortmeRNA_wd/readb/*
 
 cd ..
 
 scp -r scripts/ $PATH_TO_SAVE
 
 # Delete scratch
-
-cd /scratch
-
-rm -rf talignani_$SLURM_JOB_ID
+echo "Delete Scratch"
+rm -rf ${SCRATCH_DIRECTORY}
 
 
 seff $SLURM_JOB_ID

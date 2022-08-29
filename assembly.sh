@@ -143,5 +143,6 @@ prokka $spades_contigs_improved".fasta" --usegenus Viruses --out $spades_prokka 
 echo -e "$(date) Gene annotation: Using PROKKA, Viruses genus on Contigs from megahit" >> $logfile 2>&1
 prokka $megahit_contigs_improved".fasta" --usegenus Viruses --out $megahit_prokka --prefix megahit_prokka --force --cpus $JTrim || exit 92
 
-#Use artemis to visualize the Gene annotation
-##For example art $megahit_prokka.gbk
+echo "Use artemis to visualize the Gene annotation. For example art $megahit_prokka.gbk"
+
+

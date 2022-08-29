@@ -22,15 +22,8 @@ else
     printf "%b" "Argument count correct. Continuing processing...\n"
 fi
 
-
 ##Making folder "reads-based-taxonomy" for storing results
-if [ ! -d $OutDir ];then    # I added this line
-  echo "Creating " $OutDir; # I added this line
-  mkdir $OutDir             # I added this line
-fi
-
-##Making folder "reads-based-taxonomy" for storing results
-#mkdir $OutDir            # I Commented this line
+mkdir $OutDir
 
 ##Taxonomy classification with KRAKEN and RefSeq viral db
 KrakenViralDB="../DBs/KrakenViral"
@@ -44,7 +37,7 @@ ktImportText="${HOME}/miniconda3/bin/ktImportText"
 
 echo -e "$(date) Run taxonomy classification (Kraken/Viral RefSeq) with the following parameters: \n" >> $logfile 2>&1
 echo -e "$(date) $KrakenViralDB $FilteredReads $krakenViralOut $krakenViralClassified $krakenViralUnClassified \n" >> $logfile 2>&1
-kraken2 --db $KrakenViralDB $FilteredReads --output $krakenViralOut --classified-out $krakenViralClassified --unclassified-out $krakenViralUnClassified --report $krakenViralReport || exit 20
+kraken2 --db $KrakenViralDB $FilteredReads --output $krakenViralOut --classified-out $krakenViralClassified --unclassified-out $krakenViralUnClassified --report $krakenViralReport --gzip-compressed --threads $JTrim || exit 20
 
 echo -e "$(date) Create Krona reports in html format: \n" >> $logfile 2>&1
 cat $krakenViralOut | cut -f 2,3 > $OutDir"/krakViral.krona"$Assembler
