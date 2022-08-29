@@ -1,2 +1,10 @@
 taxonomy.tab
 .DS_Store
+KronaTools.pm
+sortmeRNA_wd/
+DBs/
+cluster_output/
+trace.txt
+trace2_newDBs
+viruses-14-01260.pdf
+input-data-files/
