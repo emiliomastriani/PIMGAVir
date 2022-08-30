@@ -50,8 +50,8 @@ echo -e "$(date) Executing concatenate_reads.py" >> $logfile 2>&1
 #Command to execute
 ## Run concatenation
 cd $wd
-mv *.part_001.fasta Forward.fasta
-mv *.part_002.fasta Reverse.fasta
+mv *.part_001.fq.fasta Forward.fasta
+mv *.part_002.fq.fasta Reverse.fasta
 cp $ConcScript .
 python3 concatenate_reads.py || exit 8
 

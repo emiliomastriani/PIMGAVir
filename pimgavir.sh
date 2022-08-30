@@ -6,10 +6,10 @@
 #SBATCH --output=pimgavir.%A.out
 #SBATCH --error=pimgavir.%A.err
 #SBATCH --time=5-23:00:00
-#SBATCH --partition=highmemplus
+#SBATCH --partition=normal
 #SBATCH --nodes=1
-#sbatch --cpus-per-task=48
-#SBATCH --mem=288GB
+#sbatch --cpus-per-task=12
+#SBATCH --mem=20GB
 # Define email for script execution
 #SBATCH --mail-user=loic.talignani@ird.fr
 # Define type notifications (NONE, BEGIN, END, FAIL, ALL)
@@ -57,6 +57,7 @@ module load bioinfo/kaiju/1.8.0 # 1.8.2 in article
 # module load bioinfo/blast/2.10.0+ # 2.9.0+ in article, blast 2.8.1+ already called by diamond 2.0.11
 module load bioinfo/seqkit/2.1.0 # 2.0.0 in article
 module load bioinfo/vsearch/2.21.1 # 2.18.0 in article
+module load system/python/3.8.12
 
 echo "Done"
 
@@ -270,7 +271,7 @@ if [ $5 == 'ALL' ];
 		##Call read-based taxonomy classification
 		printf "Calling Read-based taxonomy task and using $JTrim threads"
 		echo -e "$(date) Calling Read-based taxonomy task \n" >> $logfile 2>&1
-		./taxonomy.sh $sequence_data read-based-taxonomy $JTrim _READ & ##It will run in bg mode
+		./taxonomy-gzip.sh $sequence_data read-based-taxonomy $JTrim _READ & ##It will run in bg mode
 
 		##Call assembly-based taxonomy classification
 		assembly_func & ##It will run in bg mode

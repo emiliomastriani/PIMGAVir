@@ -3,7 +3,7 @@
 #Usage clustering.sh merged_sequences.fastq SampleName NumbOfCores
 #As an example: time ./assembly.sh readsNotrRNA_filtered.fq FKDL210225623 24
 
-merged_seq=$1 		#readsNotrRNA_filtered.fq
+merged_seq=$1 		#readsNotrRNA_filtered.fq.gz
 AssDir=$2					#Assembly folder
 JTrim=$3					#Number of cores to use
 ConcScript="/usr/share/NGS-PKGs/Concatenate/concatenate_reads.py" # This variable is not used
@@ -77,10 +77,10 @@ echo -e "$(date) Executing de-novo assembly by spades with the following argumen
 #Assembly using Spades
 seqkit split2 -p2 $merged_seq --force || exit 55
 cd $wd
-mv *.part_001.* Forward.fq
-mv *.part_002.* Reverse.fq
+mv *.part_001.* Forward.fq.gz
+mv *.part_002.* Reverse.fq.gz
 
-metaspades.py -t $JTrim -1 Forward.fq -2 Reverse.fq  -o ../$spades_out || exit 59
+metaspades.py -t $JTrim -1 Forward.fq.gz -2 Reverse.fq.gz  -o ../$spades_out || exit 59
 cd ..
 
 echo "3. Fixing misassemblies (bowtie/samtools/pilon)"
@@ -97,9 +97,9 @@ bowtie2-build $spades_out/contigs.fasta $idx_bowtie/$spades_contigs_idx || exit 
 
 #Create BAM file
 echo -e "$(date) Create bam file [bowtie2 -x] from megahit assembly" >> $logfile 2>&1
-bowtie2 -x $idx_bowtie/$megahit_contigs_idx -1 $wd/Forward.fq -2 $wd/Reverse.fq -p $JTrim | samtools view -bS -o $megahit_contigs_bam -@ $JTrim || exit 65
+bowtie2 -x $idx_bowtie/$megahit_contigs_idx -1 $wd/Forward.fq.gz -2 $wd/Reverse.fq.gz -p $JTrim | samtools view -bS -o $megahit_contigs_bam -@ $JTrim || exit 65
 echo -e "$(date) Create bam file [bowtie2 -x] from spades assembly" >> $logfile 2>&1
-bowtie2 -x $idx_bowtie/$spades_contigs_idx -1 $wd/Forward.fq -2 $wd/Reverse.fq -p $JTrim | samtools view -bS -o $spades_contigs_bam -@ $JTrim || exit 65
+bowtie2 -x $idx_bowtie/$spades_contigs_idx -1 $wd/Forward.fq.gz -2 $wd/Reverse.fq.gz -p $JTrim | samtools view -bS -o $spades_contigs_bam -@ $JTrim || exit 65
 
 #Sort bam files
 echo -e "$(date) Sort bam file [samtools sort] from megahit assembly" >> $logfile 2>&1
