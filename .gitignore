@@ -2,5 +2,8 @@ scripts/taxonomy.tab
 .DS_Store
 KronaTools.pm
 scripts/sortmeRNA_wd/
-DBs/
+DBs/Diamond-RefSeqProt/
+DBs/KrakenViral/
+DBs/NCBIRefSeq
+DBs/SILVA/
 viruses-14-01260.pdf
