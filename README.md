@@ -6,12 +6,10 @@
 ![Maintener](<https://badgen.net/badge/Maintener/Loïc Talignani/blue?scale=0.9>)
 ![MacOSX Intel](<https://badgen.net/badge/icon/Hight Sierra (10.13.6) | Catalina (10.15.7) | Big Sure (11.6.3) | Monterey (12.2.0)/E6055C?icon=apple&label&list=|&scale=0.9>)
 ![GNU/Linux](<https://badgen.net/badge/icon/Bionic Beaver (18.04) | Focal Fossa (20.04) | Jammy Jellyfish (22.04)/772953?icon=https://www.svgrepo.com/show/25424/ubuntu-logo.svg&label&list=|&scale=0.9>)
-![Issues closed](<https://badgen.net/badge/Issues closed/0/green?scale=0.9>)
-![Issues opened](<https://badgen.net/badge/Issues opened/0/yellow?scale=0.9>)
 ![Open Source](<https://badgen.net/badge/icon/Open Source/purple?icon=https://upload.wikimedia.org/wikipedia/commons/4/44/Corazón.svg&label&scale=0.9>)
 ![GNU AGPL v3](<https://badgen.net/badge/Licence/GNU AGPL v3/grey?scale=0.9>)
 ![Github](<https://badgen.net/badge/icon/Github/blue?icon=github&label&scale=0.9>)
-![Bash](<https://badgen.net/badge/icon/Bash 5.2/black?icon=terminal&label&scale=0.9>)
+![Bash](<https://badgen.net/badge/icon/Bash/black?icon=terminal&label&scale=0.9>)
 ![Python](<https://badgen.net/badge/icon/Python 3.9.5/black?icon=https://upload.wikimedia.org/wikipedia/commons/0/0a/Python.svg&label&scale=0.9>)
 ![Conda](<https://badgen.net/badge/icon/Conda 4.10.3/black?icon=codacy&label&scale=0.9>)
 
