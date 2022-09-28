@@ -10,7 +10,7 @@
 ![GNU AGPL v3](<https://badgen.net/badge/Licence/GNU AGPL v3/grey?scale=0.9>)
 ![Github](<https://badgen.net/badge/icon/Github/blue?icon=github&label&scale=0.9>)
 ![Bash](<https://badgen.net/badge/icon/Bash/black?icon=terminal&label&scale=0.9>)
-![Python](<https://badgen.net/badge/icon/Python 3.9.5/black?icon=https://upload.wikimedia.org/wikipedia/commons/0/0a/Python.svg&label&scale=0.9>)
+![Python](<https://badgen.net/badge/icon/Python%203.9.5/black?icon=https://upload.wikimedia.org/wikipedia/commons/0/0a/Python.svg&label&scale=0.9>)
 ![Conda](<https://badgen.net/badge/icon/Conda 4.10.3/black?icon=codacy&label&scale=0.9>)
 
 ## ~ ABOUT ~ ##
