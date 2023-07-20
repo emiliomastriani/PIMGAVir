@@ -8,9 +8,9 @@
 #Example: ./Misaele_Filter_Param.sh blastx_diamond.m8 /storage/RefSeq unwanted.txt reads_not_rRNA.fq
 
 blastxDiamondDB=$1 			#blastx_diamond.m8
-PathToRefSeq=$2				#/storage/RefSeq
-UnWanted=$3				#unwanted.txt
-readsNotrRNA=$4				#reads_not_rRNA.fq
+PathToRefSeq=$2					#/storage/RefSeq
+UnWanted=$3							#unwanted.txt
+readsNotrRNA=$4					#reads_not_rRNA.fq
 
 logfile="Misaele_Filter_Param.log"
 
@@ -21,21 +21,21 @@ awk '!a[$1]++ {print $1 "\t" $2}' $blastxDiamondDB > blastx_diamond_NoDup.m8
 
 ##Create Krona diagram for statistics
 echo -e "$(date) Create Krona diagram for statistics -- No duplicated reads \n" >> $logfile 2>&1
-ktImportTaxonomy blastx_diamond_NoDup.m8 -o NoDup.taxonomy.krona.html
+ktImportTaxonomy blastx_diamond_NoDup.m8 -o NoDup.taxonomy.krona.html || exit 76
 
 ##Associate the taxonomy name to every line
 echo -e "$(date) Associate the taxonomy name to every line \n" >> $logfile 2>&1
 echo -e "$(date) Path to RefSeq files: $PathToRefSeq \n" >> $logfile 2>&1
-taxonkit --data-dir $PathToRefSeq lineage -i 2 blastx_diamond_NoDup.m8 > blastx_diamond_NoDup_withTaxa.m8
+taxonkit --data-dir $PathToRefSeq lineage -i 2 blastx_diamond_NoDup.m8 > blastx_diamond_NoDup_withTaxa.m8 || exit 50
 
 ##Filter out against the unwanted list of organisms
 echo -e "$(date) Filter out against the unwanted list of organisms \n" >> $logfile 2>&1
 echo -e "$(date) Unwanted text file name: $UnWanted \n" >> $logfile 2>&1
 if [ -f "$UnWanted" ]; then
-	echo -e "$UnWanted file found, moving to grep \n" >> $logfile 2>&1 
+	echo -e "$UnWanted file found, moving to grep \n" >> $logfile 2>&1
 	grep -v -f $UnWanted blastx_diamond_NoDup_withTaxa.m8 | awk '{print $1}' > blastx_diamond_NoDup_wanted.m8
-	grep -v -f $UnWanted blastx_diamond_NoDup_withTaxa.m8 | awk '{print $1 ,"\t", $2}' > blastx_diamond_NoDup_withTaxa_wanted.m8	
-else 
+	grep -v -f $UnWanted blastx_diamond_NoDup_withTaxa.m8 | awk '{print $1 ,"\t", $2}' > blastx_diamond_NoDup_withTaxa_wanted.m8
+else
     	echo -e "$UnWanted file does not exist...terminated \n" >> $logfile 2>&1
     	echo -e "$UnWanted file does not exist...terminated \n"
 	exit 1
@@ -43,9 +43,9 @@ fi
 
 ##Create Krona diagram for statistics
 echo -e "$(date) Create Krona diagram for statistics -- Only wanted reads \n" >> $logfile 2>&1
-ktImportTaxonomy blastx_diamond_NoDup_wanted.m8 -o WantedReads.taxonomy.krona.html
+ktImportTaxonomy blastx_diamond_NoDup_wanted.m8 -o WantedReads.taxonomy.krona.html || exit 76
 
 ##Extract from the fastq file only the reads we will interested to, according to their name/ID
 echo -e "$(date) Extract from the fastq file only the reads we will interested to, according to their name/ID \n" >> $logfile 2>&1
 echo -e "$(date) Reads NOT rRNA file name: $readsNotrRNA \n" >> $logfile 2>&1
-seqtk subseq $readsNotrRNA blastx_diamond_NoDup_withTaxa_wanted.m8 > readsNotrRNA_filtered.fq
+seqtk subseq $readsNotrRNA blastx_diamond_NoDup_withTaxa_wanted.m8 > readsNotrRNA_filtered.fq || exit 40
