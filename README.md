@@ -26,7 +26,7 @@ Refer to [PIMGAVir_SYA.pdf](https://github.com/emiliomastriani/PIMGAVir/blob/mai
 
 [Table n1.](https://github.com/emiliomastriani/PIMGAVir/blob/main/Table1.png) and [Table n2.](https://github.com/emiliomastriani/PIMGAVir/blob/main/Table2.png) report the list of packages needed to install both PIMGAVir and Vir-MinION.
 
-Refer to [PIMGAVIR-CAMISIM.txt](https://github.com/emiliomastriani/PIMGAVir/files/8736295/PIMGAVIR-CAMISIM.txt) for generating synthetic data using CAMISIM and run PIMGAVir using it. If you prefer to use synthetic data used during the PIMGAVir test, download the following file SyntheticData_PIMGAVir.tgz [https://github.com/emiliomastriani/PIMGAVir/blob/main/SyntheticData_PIMGAVir.tgz]
+Refer to [PIMGAVIR-CAMISIM.txt](https://github.com/emiliomastriani/PIMGAVir/files/8736295/PIMGAVIR-CAMISIM.txt) for generating synthetic data using CAMISIM and run PIMGAVir using it. If you prefer to use synthetic data used during the PIMGAVir test, download the following file [SyntheticData_PIMGAVir.tgz](https://github.com/emiliomastriani/PIMGAVir/blob/main/SyntheticData_PIMGAVir.tgz)
 
 Refer to [CreateDBs.txt](https://github.com/emiliomastriani/PIMGAVir/files/8736791/CreateDBs.txt) for a step-by-step guide on installing and configuring the DBs need by PIMGAVir
 
