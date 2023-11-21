@@ -32,4 +32,4 @@ Refer to [CreateDBs.txt](https://github.com/emiliomastriani/PIMGAVir/files/87367
 
 Please, refer to the manuscript "Mastriani E, Bienes KM, Wong G, Berthet N. PIMGAVir and Vir-MinION: Two Viral Metagenomic Pipelines for Complete Baseline Analysis of 2nd and 3rd Generation Data. Viruses. 2022 Jun 10;14(6):1260. doi: 10.3390/v14061260. PMID: 35746732; PMCID: PMC9230805." for more information. 
 
-![alt text] (https://github.com/emiliomastriani/PIMGAVir/blob/main/Table1.png)
+![alt text] (https://github.com/emiliomastriani/PIMGAVir/blob/main/Table1.png?raw=true)
