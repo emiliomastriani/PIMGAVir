@@ -22,9 +22,9 @@ Refer to [[PIMGAVir_User_Manual.pdf]((https://github.com/emiliomastriani/PIMGAVi
 
 Refer to [PIMGAVir_User_Manual.pdf](https://github.com/emiliomastriani/PIMGAVir/files/8588601/PIMGAVir_User_Manual.pdf) for a quick use of PIMGAVir. 
 
-Refer to [PIMGAVir_SYA.pdf] for a more detailed description of PIMGAVir infrastracture.
+Refer to [PIMGAVir_SYA.pdf] (https://github.com/emiliomastriani/PIMGAVir/blob/main/PIMGAVir-Pipeline_V1.1.pdf) for a more detailed description of PIMGAVir infrastracture.
 
-
+Table n1. and n2. report the list of packages needed to install both PIMGAVir and Vir-MinION.
 
 Refer to [PIMGAVIR-CAMISIM.txt](https://github.com/emiliomastriani/PIMGAVir/files/8736295/PIMGAVIR-CAMISIM.txt) for generating synthetic data using CAMISIM and run PIMGAVir using it. If you prefer to use synthetic data used during the PIMGAVir test, download the following file SyntheticData_PIMGAVir.tgz [https://github.com/emiliomastriani/PIMGAVir/blob/main/SyntheticData_PIMGAVir.tgz]
 
