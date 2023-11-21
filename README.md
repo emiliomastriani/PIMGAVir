@@ -24,12 +24,10 @@ Refer to [PIMGAVir_User_Manual.pdf](https://github.com/emiliomastriani/PIMGAVir/
 
 Refer to [PIMGAVir_SYA.pdf] (https://github.com/emiliomastriani/PIMGAVir/blob/main/PIMGAVir-Pipeline_V1.1.pdf) for a more detailed description of PIMGAVir infrastracture.
 
-Table n1. and n2. report the list of packages needed to install both PIMGAVir and Vir-MinION.
+[Table n1.]((https://github.com/emiliomastriani/PIMGAVir/blob/main/Table1.png) and [Table n2.]((https://github.com/emiliomastriani/PIMGAVir/blob/main/Table2.png) report the list of packages needed to install both PIMGAVir and Vir-MinION.
 
 Refer to [PIMGAVIR-CAMISIM.txt](https://github.com/emiliomastriani/PIMGAVir/files/8736295/PIMGAVIR-CAMISIM.txt) for generating synthetic data using CAMISIM and run PIMGAVir using it. If you prefer to use synthetic data used during the PIMGAVir test, download the following file SyntheticData_PIMGAVir.tgz [https://github.com/emiliomastriani/PIMGAVir/blob/main/SyntheticData_PIMGAVir.tgz]
 
 Refer to [CreateDBs.txt](https://github.com/emiliomastriani/PIMGAVir/files/8736791/CreateDBs.txt) for a step-by-step guide on installing and configuring the DBs need by PIMGAVir
 
 Please, refer to the manuscript "Mastriani E, Bienes KM, Wong G, Berthet N. PIMGAVir and Vir-MinION: Two Viral Metagenomic Pipelines for Complete Baseline Analysis of 2nd and 3rd Generation Data. Viruses. 2022 Jun 10;14(6):1260. doi: 10.3390/v14061260. PMID: 35746732; PMCID: PMC9230805." for more information. 
-
-![alt text] (https://github.com/emiliomastriani/PIMGAVir/blob/main/Table1.png?raw=true)
